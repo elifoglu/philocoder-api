@@ -9,7 +9,10 @@ import com.philocoder.philocoder_api.service.ContentService
 import com.philocoder.philocoder_api.util.JsonToESEntityIndexer
 import com.philocoder.philocoder_api.util.ResourceReader
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
@@ -42,7 +45,7 @@ class ContentController(
             objectReader = objectReader,
             repoToIndex = repository
         ) { it.contentId.toString() }
-        repository.getAllEntities()
+        repository.getEntities()
             .map { content -> content.copy(content = ResourceReader.readContentText(content.contentId)) }
             .forEach { repository.addEntity(it.contentId.toString(), it) }
     }

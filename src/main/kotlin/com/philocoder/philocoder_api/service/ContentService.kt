@@ -16,14 +16,13 @@ class ContentService(
 ) {
 
     fun getContentsResponse(req: ContentsOfTagRequest): ContentsResponse {
-        val tag: Tag? = tagRepository.findEntity(req.tagId)
-        if (tag != null) {
-            val contentResponses = repository.getContentsForTag(req.page, req.size, tag.name)
-                .map { ContentResponse.createWith(it, repository) }
-            var contentCount = repository.getContentCount(tag.name)
-            val totalPageCount = if (contentCount % req.size == 0) contentCount / req.size else (contentCount / req.size) + 1
-            return ContentsResponse(totalPageCount, contentResponses)
-        }
-        return ContentsResponse.empty
+        val tag: Tag = tagRepository.findEntity(req.tagId)
+            ?: return ContentsResponse.empty
+        val contentResponses = repository.getContentsForTag(req.page, req.size, tag.name)
+            .map { ContentResponse.createWith(it, repository) }
+        val contentCount = repository.getContentCount(tag.name)
+        val totalPageCount =
+            if (contentCount % req.size == 0) contentCount / req.size else (contentCount / req.size) + 1
+        return ContentsResponse(totalPageCount, contentResponses)
     }
 }

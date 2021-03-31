@@ -3,6 +3,7 @@ package com.philocoder.philocoder_api.repository
 import arrow.core.None
 import arrow.core.Option
 import arrow.core.Some
+import arrow.core.Tuple2
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
 import org.elasticsearch.action.get.GetRequest
@@ -19,6 +20,7 @@ import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.index.reindex.DeleteByQueryRequest
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.builder.SearchSourceBuilder
+import org.elasticsearch.search.sort.SortOrder
 
 
 abstract class BaseRepository<T>(
@@ -26,12 +28,23 @@ abstract class BaseRepository<T>(
     private val objectReader: ObjectReader
 ) : HasIndexName, HasEntityKey {
 
-    fun getAllEntities(): List<T> {
-        return getEntities(1, 10000, QueryBuilders.matchAllQuery())
-    }
-
-    fun getEntities(page: Int, size: Int): List<T> {
-        return getEntities(page, size, QueryBuilders.matchAllQuery())
+    fun getEntities(
+        page: Int = 1,
+        size: Int = 10000,
+        queryBuilder: QueryBuilder = QueryBuilders.matchAllQuery(),
+        sorter: Tuple2<String, SortOrder>? = null
+    ): List<T> {
+        val searchRequest = SearchRequest(indexName)
+        val searchSourceBuilder = SearchSourceBuilder()
+            .query(queryBuilder)
+            .from(size * (page - 1))
+            .size(size)
+            .trackTotalHits(true)
+        sorter?.also { searchSourceBuilder.sort(it.a, it.b) }
+        searchRequest.source(searchSourceBuilder)
+        val searchResponse = client.search(searchRequest, RequestOptions.DEFAULT)
+        val hits = searchResponse.hits.hits
+        return toEntities(hits)
     }
 
     fun findEntity(id: String): T? {
@@ -40,20 +53,6 @@ abstract class BaseRepository<T>(
         val get: GetResponse = client.get(getRequest, RequestOptions.DEFAULT)
         return if (!get.isExists) null
         else toEntity(get.sourceAsBytes!!).orNull()
-    }
-
-
-    fun getEntities(page: Int, size: Int, queryBuilder: QueryBuilder): List<T> {
-        val searchRequest = SearchRequest(indexName)
-        val searchSourceBuilder = SearchSourceBuilder()
-            .query(queryBuilder)
-            .from(size * (page - 1))
-            .size(size)
-            .trackTotalHits(true)
-        searchRequest.source(searchSourceBuilder)
-        val searchResponse = client.search(searchRequest, RequestOptions.DEFAULT)
-        val hits = searchResponse.hits.hits
-        return toEntities(hits)
     }
 
     fun getTotalEntityCount(queryBuilder: QueryBuilder): Int {
