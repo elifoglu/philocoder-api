@@ -6,7 +6,8 @@ import com.philocoder.philocoder_api.model.request.ContentsOfTagRequest
 import com.philocoder.philocoder_api.model.response.ContentsResponse
 import com.philocoder.philocoder_api.repository.ContentRepository
 import com.philocoder.philocoder_api.service.ContentService
-import com.philocoder.philocoder_api.service.DataInsertionService
+import com.philocoder.philocoder_api.util.JsonToESEntityIndexer
+import com.philocoder.philocoder_api.util.ResourceReader
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.web.bind.annotation.*
 
@@ -36,10 +37,13 @@ class ContentController(
 
     @GetMapping("/add-all-contents")
     fun addAll() {
-        DataInsertionService.addAll("allContents", objectReader, repository) { it.contentId.toString() }
-        val contents: List<Content> = repository.getAllEntities()
-        contents
-            .map { content -> content.copy(content = DataInsertionService.getContentText(content.contentId)) }
+        JsonToESEntityIndexer.indexFromJsonArrayField(
+            jsonArrayFieldName = "allContents",
+            objectReader = objectReader,
+            repoToIndex = repository
+        ) { it.contentId.toString() }
+        repository.getAllEntities()
+            .map { content -> content.copy(content = ResourceReader.readContentText(content.contentId)) }
             .forEach { repository.addEntity(it.contentId.toString(), it) }
     }
 }

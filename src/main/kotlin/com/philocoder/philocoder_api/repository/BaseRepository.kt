@@ -27,7 +27,7 @@ abstract class BaseRepository<T>(
 ) : HasIndexName, HasEntityKey {
 
     fun getAllEntities(): List<T> {
-        return getEntities(1, 100000, QueryBuilders.matchAllQuery())
+        return getEntities(1, 10000, QueryBuilders.matchAllQuery())
     }
 
     fun getEntities(page: Int, size: Int): List<T> {
