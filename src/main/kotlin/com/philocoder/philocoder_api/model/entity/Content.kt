@@ -13,7 +13,7 @@ data class Content(
     val refs: List<ContentID>?
 ) {
 
-    //this property is being indexed to elasticsearch
+    //This property is being indexed to elasticsearch, so it being used. Don't delete it.
     val dateAsTimestamp: Long? =
         if (date.year != null && date.month != null && date.day != null) {
             val calendar = Calendar.getInstance()
