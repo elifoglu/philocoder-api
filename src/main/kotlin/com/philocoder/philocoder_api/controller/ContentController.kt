@@ -45,6 +45,7 @@ class ContentController(
             objectReader = objectReader,
             repoToIndex = repository
         ) { it.contentId.toString() }
+        Thread.sleep(1000);
         repository.getEntities()
             .map { content -> content.copy(content = ResourceReader.readContentText(content.contentId)) }
             .forEach { repository.addEntity(it.contentId.toString(), it) }

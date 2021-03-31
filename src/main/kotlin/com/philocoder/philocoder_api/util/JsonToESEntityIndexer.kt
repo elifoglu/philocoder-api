@@ -17,6 +17,7 @@ object JsonToESEntityIndexer {
         idExtractor: ((T) -> String)
     ) {
         repoToIndex.deleteAll()
+        Thread.sleep(1000);
         val json = ResourceReader.readBaseDataFile()
         val baseObject = gson.fromJson(json, JsonObject::class.java)
         val entities: List<T> = baseObject.get(jsonArrayFieldName)
