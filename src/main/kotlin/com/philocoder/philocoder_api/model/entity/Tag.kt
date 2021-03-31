@@ -16,7 +16,7 @@ data class Tag(
     fun getContentSorter(): Tuple2<String, SortOrder> {
         return Tuple2(
             "dateAsTimestamp",
-            if(contentSortStrategy == "DateASC") SortOrder.ASC else SortOrder.DESC
+            if (contentSortStrategy == "DateASC") SortOrder.ASC else SortOrder.DESC
         )
     }
 }
