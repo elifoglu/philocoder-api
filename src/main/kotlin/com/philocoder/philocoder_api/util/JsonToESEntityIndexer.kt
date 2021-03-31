@@ -8,6 +8,8 @@ import com.philocoder.philocoder_api.repository.BaseRepository
 
 object JsonToESEntityIndexer {
 
+    private val gson = Gson()
+
     fun <T> indexFromJsonArrayField(
         jsonArrayFieldName: String,
         objectReader: ObjectReader,
@@ -16,8 +18,7 @@ object JsonToESEntityIndexer {
     ) {
         repoToIndex.deleteAll()
         val json = ResourceReader.readBaseDataFile()
-        val g = Gson()
-        val baseObject = g.fromJson(json, JsonObject::class.java)
+        val baseObject = gson.fromJson(json, JsonObject::class.java)
         val entities: List<T> = baseObject.get(jsonArrayFieldName)
             .asJsonArray
             .map { objectReader.readValue(it.toString()) }
