@@ -24,6 +24,6 @@ class ContentService(
             val totalPageCount = if (contentCount % req.size == 0) contentCount / req.size else (contentCount / req.size) + 1
             return ContentsResponse(totalPageCount, contentResponses)
         }
-        return ContentsResponse(0, Collections.emptyList())
+        return ContentsResponse.empty
     }
 }
