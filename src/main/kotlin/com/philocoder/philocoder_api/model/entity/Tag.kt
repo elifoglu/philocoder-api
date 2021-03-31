@@ -18,6 +18,5 @@ data class Tag(
             "dateAsTimestamp",
             if(contentSortStrategy == "DateASC") SortOrder.ASC else SortOrder.DESC
         )
-
     }
 }
