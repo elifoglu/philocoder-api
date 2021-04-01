@@ -1,5 +1,6 @@
 package com.philocoder.philocoder_api.repository
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
 import com.philocoder.philocoder_api.model.entity.Content
 import com.philocoder.philocoder_api.model.entity.Tag
@@ -13,7 +14,8 @@ import org.springframework.stereotype.Repository
 open class ContentRepository(
     client: RestHighLevelClient,
     @Qualifier("contentObjectReader") objectReader: ObjectReader,
-) : BaseRepository<Content>(client, objectReader) {
+    objectMapper: ObjectMapper
+) : BaseRepository<Content>(client, objectReader, objectMapper) {
 
     override val indexName: String
         get() = "contents"
@@ -26,7 +28,7 @@ open class ContentRepository(
             page = page,
             size = size,
             queryBuilder = QueryBuilders.matchQuery("tags", tag.name),
-            sorter = tag.getContentSorter()
+            sorter = tag.contentSorter
         )
     }
 

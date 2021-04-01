@@ -25,7 +25,8 @@ import org.elasticsearch.search.sort.SortOrder
 
 abstract class BaseRepository<T>(
     private val client: RestHighLevelClient,
-    private val objectReader: ObjectReader
+    private val objectReader: ObjectReader,
+    private val objectMapper: ObjectMapper
 ) : HasIndexName, HasEntityKey {
 
     fun getEntities(
@@ -65,8 +66,8 @@ abstract class BaseRepository<T>(
     fun addEntity(id: String, it: T) {
         val indexRequest = IndexRequest(indexName)
         indexRequest.id(id)
-            .source(ObjectMapper().writeValueAsString(it), XContentType.JSON)
-        val index = client.index(indexRequest, RequestOptions.DEFAULT)
+            .source(objectMapper.writeValueAsString(it), XContentType.JSON)
+        client.index(indexRequest, RequestOptions.DEFAULT)
     }
 
     fun deleteAll() {

@@ -1,6 +1,7 @@
 package com.philocoder.philocoder_api.model.entity
 
 import arrow.core.Tuple2
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.elasticsearch.search.sort.SortOrder
 
 data class Tag(
@@ -13,10 +14,9 @@ data class Tag(
     val showInHeader: Boolean
 ) {
 
-    fun getContentSorter(): Tuple2<String, SortOrder> {
-        return Tuple2(
-            "dateAsTimestamp",
-            if (contentSortStrategy == "DateASC") SortOrder.ASC else SortOrder.DESC
-        )
-    }
+    @JsonIgnore
+    val contentSorter: Tuple2<String, SortOrder> = Tuple2(
+        "dateAsTimestamp",
+        if (contentSortStrategy == "DateASC") SortOrder.ASC else SortOrder.DESC
+    )
 }

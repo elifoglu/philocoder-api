@@ -1,5 +1,6 @@
 package com.philocoder.philocoder_api.repository
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
 import com.philocoder.philocoder_api.model.entity.Tag
 import com.philocoder.philocoder_api.model.request.TagsRequest
@@ -12,7 +13,8 @@ import org.springframework.stereotype.Repository
 open class TagRepository(
     client: RestHighLevelClient,
     @Qualifier("tagObjectReader") objectReader: ObjectReader,
-): BaseRepository<Tag>(client, objectReader) {
+    objectMapper: ObjectMapper
+) : BaseRepository<Tag>(client, objectReader, objectMapper) {
 
     override val indexName: String
         get() = "tags"
