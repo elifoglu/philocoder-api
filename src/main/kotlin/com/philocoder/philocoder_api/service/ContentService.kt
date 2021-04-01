@@ -7,7 +7,6 @@ import com.philocoder.philocoder_api.model.response.ContentsResponse
 import com.philocoder.philocoder_api.repository.ContentRepository
 import com.philocoder.philocoder_api.repository.TagRepository
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class ContentService(

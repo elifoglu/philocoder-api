@@ -1,6 +1,8 @@
 package com.philocoder.philocoder_api.util
 
 import com.philocoder.philocoder_api.model.ContentID
+import org.apache.commons.io.IOUtils
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -11,12 +13,18 @@ object ResourceReader {
     private const val jsonFileName = "data.json"
 
     fun readBaseDataFile(): String {
-        val url = this::class.java.getResource("/$contentDirectoryName/$jsonFileName")
-        return String(Files.readAllBytes(Paths.get(url.toURI())))
+        javaClass.getResourceAsStream("/$contentDirectoryName/$jsonFileName")
+            .use { input ->
+                val data = IOUtils.toByteArray(input)
+                return String(data, StandardCharsets.UTF_8);
+            }
     }
 
     fun readContentText(contentID: ContentID): String {
-        val url = this::class.java.getResource("/$contentDirectoryName/$contentID")
-        return String(Files.readAllBytes(Paths.get(url.toURI())))
+        javaClass.getResourceAsStream("/$contentDirectoryName/$contentID")
+            .use { input ->
+                val data = IOUtils.toByteArray(input)
+                return String(data, StandardCharsets.UTF_8);
+            }
     }
 }
