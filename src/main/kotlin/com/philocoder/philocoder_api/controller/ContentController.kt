@@ -44,6 +44,12 @@ class ContentController(
         }
     }
 
+    @CrossOrigin
+    @PostMapping("/previewContent")
+    fun previewContent(@RequestBody req: CreateContentRequest): Content? {
+        return Content.fromRequest(req, repository, tagRepository)
+    }
+
     @GetMapping("/delete-all-contents")
     fun delete(): Unit =
         repository.deleteAll()
