@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectReader
 import com.philocoder.philocoder_api.model.entity.Content
 import com.philocoder.philocoder_api.model.request.ContentsOfTagRequest
 import com.philocoder.philocoder_api.model.request.CreateContentRequest
+import com.philocoder.philocoder_api.model.response.ContentResponse
 import com.philocoder.philocoder_api.model.response.ContentsResponse
 import com.philocoder.philocoder_api.repository.ContentRepository
 import com.philocoder.philocoder_api.repository.TagRepository
@@ -24,31 +25,28 @@ class ContentController(
 
     @CrossOrigin
     @GetMapping("/contents")
-    fun get(req: ContentsOfTagRequest): ContentsResponse {
-        return service.getContentsResponse(req)
-    }
+    fun get(req: ContentsOfTagRequest): ContentsResponse =
+        service.getContentsResponse(req)
 
     @CrossOrigin
     @GetMapping("/contents/{contentId}")
-    fun find(@PathVariable("contentId") contentId: String): Content? {
-        return repository.findEntity(contentId)
-    }
+    fun find(@PathVariable("contentId") contentId: String): ContentResponse =
+        ContentResponse.createWith(repository.findEntity(contentId)!!, repository)
 
     @CrossOrigin
     @PostMapping("/contents")
-    fun addContent(@RequestBody req: CreateContentRequest): Content? {
-        val content: Content? =
-            Content.fromRequest(req, repository, tagRepository)
-        return content?.apply {
-            repository.addEntity(contentId.toString(), this)
-        }
-    }
+    fun addContent(@RequestBody req: CreateContentRequest): ContentResponse =
+        Content.fromRequest(req, repository, tagRepository)!!
+            .apply {
+                repository.addEntity(contentId.toString(), this)
+            }
+            .let { ContentResponse.createWith(it, repository) }
 
     @CrossOrigin
     @PostMapping("/previewContent")
-    fun previewContent(@RequestBody req: CreateContentRequest): Content? {
-        return Content.fromRequest(req, repository, tagRepository)
-    }
+    fun previewContent(@RequestBody req: CreateContentRequest): ContentResponse =
+        Content.fromRequest(req, repository, tagRepository)!!
+            .let { ContentResponse.createWith(it, repository) }
 
     @GetMapping("/delete-all-contents")
     fun delete(): Unit =
