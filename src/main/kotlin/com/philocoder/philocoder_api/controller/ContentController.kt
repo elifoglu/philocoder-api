@@ -3,21 +3,21 @@ package com.philocoder.philocoder_api.controller
 import com.fasterxml.jackson.databind.ObjectReader
 import com.philocoder.philocoder_api.model.entity.Content
 import com.philocoder.philocoder_api.model.request.ContentsOfTagRequest
+import com.philocoder.philocoder_api.model.request.CreateContentRequest
 import com.philocoder.philocoder_api.model.response.ContentsResponse
 import com.philocoder.philocoder_api.repository.ContentRepository
+import com.philocoder.philocoder_api.repository.TagRepository
 import com.philocoder.philocoder_api.service.ContentService
 import com.philocoder.philocoder_api.util.JsonToESEntityIndexer
 import com.philocoder.philocoder_api.util.ResourceReader
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
 class ContentController(
     private val repository: ContentRepository,
+    private val tagRepository: TagRepository,
     private val service: ContentService,
     @Qualifier("contentObjectReader") private val objectReader: ObjectReader
 ) {
@@ -32,6 +32,16 @@ class ContentController(
     @GetMapping("/contents/{contentId}")
     fun find(@PathVariable("contentId") contentId: String): Content? {
         return repository.findEntity(contentId)
+    }
+
+    @CrossOrigin
+    @PostMapping("/contents")
+    fun addContent(@RequestBody req: CreateContentRequest): Content? {
+        val content: Content? =
+            Content.fromRequest(req, repository, tagRepository)
+        return content?.apply {
+            repository.addEntity(contentId.toString(), this)
+        }
     }
 
     @GetMapping("/delete-all-contents")
