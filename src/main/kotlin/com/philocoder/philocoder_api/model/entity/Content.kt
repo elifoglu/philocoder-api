@@ -71,7 +71,10 @@ data class Content(
                 val allRefIdsExists = refIds.forAll { refId ->
                     allContents.exists { it.contentId == refId }
                 }
-                if (!allRefIdsExists) null else refIds
+                if (!allRefIdsExists) {
+                    return null
+                }
+                refIds
             }
 
             //
