@@ -89,6 +89,15 @@
       "contentRenderType":  "normal",
       "showContentCount": false,
       "showInHeader": true
+    },
+    {
+      "tagId": "proje_fikirleri",
+      "name": "proje fikirleri",
+      "contentSortStrategy": "DateDESC",
+      "showAsTag": true,
+      "contentRenderType":  "normal",
+      "showContentCount": true,
+      "showInHeader": false
     }
   ],
   "allContents": [
