@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectReader
 import com.philocoder.philocoder_api.model.entity.Content
 import com.philocoder.philocoder_api.model.request.ContentsOfTagRequest
 import com.philocoder.philocoder_api.model.request.CreateContentRequest
+import com.philocoder.philocoder_api.model.request.UpdateContentRequest
 import com.philocoder.philocoder_api.model.response.ContentResponse
 import com.philocoder.philocoder_api.model.response.ContentsResponse
 import com.philocoder.philocoder_api.repository.ContentRepository
@@ -36,16 +37,30 @@ class ContentController(
     @CrossOrigin
     @PostMapping("/contents")
     fun addContent(@RequestBody req: CreateContentRequest): ContentResponse =
-        Content.fromRequest(req, repository, tagRepository)!!
+        Content.createIfValidForCreation(req, repository, tagRepository)!!
             .apply {
                 repository.addEntity(contentId.toString(), this)
             }
             .let { ContentResponse.createWith(it, repository) }
 
     @CrossOrigin
+    @PostMapping("/contents/{contentId}")
+    fun updateContent(
+        @PathVariable("contentId") contentId: String,
+        @RequestBody req: UpdateContentRequest
+    ): ContentResponse =
+        Content.createIfValidForUpdate(contentId.toInt(), req, repository, tagRepository)!!
+            .apply {
+                repository.deleteEntity(contentId)
+                Thread.sleep(1000)
+                repository.addEntity(contentId, this)
+            }
+            .let { ContentResponse.createWith(it, repository) }
+
+    @CrossOrigin
     @PostMapping("/previewContent")
     fun previewContent(@RequestBody req: CreateContentRequest): ContentResponse =
-        Content.fromRequest(req, repository, tagRepository)!!
+        Content.createIfValidForPreview(req.id.toInt(), req, repository, tagRepository)!!
             .let { ContentResponse.createWith(it, repository) }
 
     @GetMapping("/delete-all-contents")

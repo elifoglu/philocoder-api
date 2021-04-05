@@ -6,6 +6,7 @@ import arrow.core.Some
 import arrow.core.Tuple2
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
+import org.elasticsearch.action.delete.DeleteRequest
 import org.elasticsearch.action.get.GetRequest
 import org.elasticsearch.action.get.GetResponse
 import org.elasticsearch.action.index.IndexRequest
@@ -68,6 +69,10 @@ abstract class BaseRepository<T>(
         indexRequest.id(id)
             .source(objectMapper.writeValueAsString(it), XContentType.JSON)
         client.index(indexRequest, RequestOptions.DEFAULT)
+    }
+
+    fun deleteEntity(id: String) {
+        client.delete(DeleteRequest(indexName).id(id), RequestOptions.DEFAULT)
     }
 
     fun deleteAll() {

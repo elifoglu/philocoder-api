@@ -1,7 +1,7 @@
 package com.philocoder.philocoder_api.model.request
 
-data class CreateContentRequest(
-    val id: String,
+data class UpdateContentRequest(
+    val id: Int?,
     override val title: String?,
     override val text: String,
     override val date: String?,
@@ -9,4 +9,4 @@ data class CreateContentRequest(
     override val tags: String,
     override val refs: String?,
     override val password: String
-): ContentRequest
+) : ContentRequest
