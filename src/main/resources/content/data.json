@@ -64,6 +64,15 @@
       "showInHeader": true
     },
     {
+      "tagId": "hap",
+      "name": "hap",
+      "contentSortStrategy": "DateDESC",
+      "showAsTag": true,
+      "contentRenderType":  "normal",
+      "showContentCount": true,
+      "showInHeader": true
+    },
+    {
       "tagId": "begenilen",
       "name": "beğenilen",
       "contentSortStrategy": "DateDESC",
@@ -93,6 +102,15 @@
     {
       "tagId": "proje_fikirleri",
       "name": "proje fikirleri",
+      "contentSortStrategy": "DateDESC",
+      "showAsTag": true,
+      "contentRenderType":  "normal",
+      "showContentCount": true,
+      "showInHeader": false
+    },
+    {
+      "tagId": "notlar_purdikkat",
+      "name": "notlar: pürdikkat",
       "contentSortStrategy": "DateDESC",
       "showAsTag": true,
       "contentRenderType":  "normal",
