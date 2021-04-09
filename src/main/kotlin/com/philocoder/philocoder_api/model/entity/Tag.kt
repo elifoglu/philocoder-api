@@ -11,7 +11,8 @@ data class Tag(
     val showAsTag: Boolean,
     val contentRenderType: String,
     val showContentCount: Boolean,
-    val showInHeader: Boolean
+    val showInHeader: Boolean,
+    val infoContentId: Int?
 ) {
 
     @JsonIgnore

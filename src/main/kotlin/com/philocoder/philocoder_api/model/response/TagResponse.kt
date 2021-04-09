@@ -11,7 +11,8 @@ data class TagResponse(
     val contentRenderType: String,
     val showContentCount: Boolean,
     val showInHeader: Boolean,
-    val contentCount: Int
+    val contentCount: Int,
+    val infoContentId: Int?
 ) {
 
     companion object {
@@ -24,7 +25,8 @@ data class TagResponse(
                 contentRenderType = tag.contentRenderType,
                 showContentCount = tag.showContentCount,
                 showInHeader = tag.showInHeader,
-                contentCount = repo.getContentCount(tag.name)
+                contentCount = repo.getContentCount(tag.name),
+                infoContentId = tag.infoContentId
             )
     }
 }
