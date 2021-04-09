@@ -4,6 +4,7 @@ import arrow.core.Tuple2
 import arrow.core.extensions.list.foldable.exists
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.philocoder.philocoder_api.model.request.CreateTagRequest
+import com.philocoder.philocoder_api.model.request.UpdateTagRequest
 import com.philocoder.philocoder_api.repository.TagRepository
 import com.philocoder.philocoder_api.util.Encryptor
 import com.philocoder.philocoder_api.util.RootUserConfig
@@ -57,6 +58,23 @@ data class Tag(
                 showContentCount = req.showContentCount,
                 showInHeader = req.showInHeader,
                 infoContentId = null
+            )
+        }
+
+        fun createIfValidForUpdate(
+            tagId: String,
+            req: UpdateTagRequest,
+            repository: TagRepository
+        ): Tag? {
+            if (Encryptor.encrypt(req.password) != RootUserConfig.encryptedPassword
+            ) {
+                return null
+            }
+
+            val tag: Tag = repository.findEntity(tagId)!!
+
+            return tag.copy(
+                infoContentId = if(req.infoContentId.isEmpty()) null else req.infoContentId.toInt()
             )
         }
     }

@@ -3,9 +3,7 @@ package com.philocoder.philocoder_api.controller
 import com.fasterxml.jackson.databind.ObjectReader
 import com.philocoder.philocoder_api.model.entity.Content
 import com.philocoder.philocoder_api.model.entity.Tag
-import com.philocoder.philocoder_api.model.request.CreateContentRequest
-import com.philocoder.philocoder_api.model.request.CreateTagRequest
-import com.philocoder.philocoder_api.model.request.TagsRequest
+import com.philocoder.philocoder_api.model.request.*
 import com.philocoder.philocoder_api.model.response.ContentResponse
 import com.philocoder.philocoder_api.model.response.TagResponse
 import com.philocoder.philocoder_api.repository.ContentRepository
@@ -34,7 +32,21 @@ class TagController(
         Tag.createIfValidForCreation(req, repository)!!
             .run {
                 repository.addEntity(tagId, this)
-                "created"
+                "done"
+            }
+
+    @CrossOrigin
+    @PostMapping("/tags/{tagId}")
+    fun updateContent(
+        @PathVariable("tagId") tagId: String,
+        @RequestBody req: UpdateTagRequest
+    ): String =
+        Tag.createIfValidForUpdate(tagId, req, repository)!!
+            .run {
+                repository.deleteEntity(tagId)
+                Thread.sleep(1000)
+                repository.addEntity(tagId, this)
+                "done"
             }
 
     @GetMapping("/delete-all-tags")
