@@ -16,7 +16,8 @@
       "showAsTag": true,
       "contentRenderType":  "normal",
       "showContentCount": true,
-      "showInHeader": true
+      "showInHeader": true,
+      "infoContentId": 15
     },
     {
       "tagId": "perspektif",
@@ -25,7 +26,8 @@
       "showAsTag": true,
       "contentRenderType":  "normal",
       "showContentCount": true,
-      "showInHeader": true
+      "showInHeader": true,
+      "infoContentId": 15
     },
     {
       "tagId": "ozgun",
@@ -79,7 +81,8 @@
       "showAsTag": true,
       "contentRenderType":  "minified",
       "showContentCount": true,
-      "showInHeader": true
+      "showInHeader": true,
+      "infoContentId": 15
     },
     {
       "tagId": "kisisel_gelisim",

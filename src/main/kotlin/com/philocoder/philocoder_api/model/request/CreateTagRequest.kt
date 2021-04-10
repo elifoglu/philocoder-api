@@ -7,6 +7,6 @@ data class CreateTagRequest(
     val showAsTag: Boolean,
     val contentRenderType: String,
     val showContentCount: Boolean,
-    val showInHeader: Boolean,
+    val headerIndex: Int?,
     val password: String
 )

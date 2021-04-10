@@ -10,7 +10,7 @@ data class TagResponse(
     val showAsTag: Boolean,
     val contentRenderType: String,
     val showContentCount: Boolean,
-    val showInHeader: Boolean,
+    val headerIndex: Int?,
     val contentCount: Int,
     val infoContentId: Int?
 ) {
@@ -24,7 +24,7 @@ data class TagResponse(
                 showAsTag = tag.showAsTag,
                 contentRenderType = tag.contentRenderType,
                 showContentCount = tag.showContentCount,
-                showInHeader = tag.showInHeader,
+                headerIndex = tag.headerIndex,
                 contentCount = repo.getContentCount(tag.name),
                 infoContentId = tag.infoContentId
             )

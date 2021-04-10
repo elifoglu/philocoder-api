@@ -17,7 +17,7 @@ data class Tag(
     val showAsTag: Boolean,
     val contentRenderType: String,
     val showContentCount: Boolean,
-    val showInHeader: Boolean,
+    val headerIndex: Int?,
     val infoContentId: Int?
 ) {
 
@@ -56,7 +56,7 @@ data class Tag(
                 showAsTag = req.showAsTag,
                 contentRenderType = req.contentRenderType,
                 showContentCount = req.showContentCount,
-                showInHeader = req.showInHeader,
+                headerIndex = req.headerIndex,
                 infoContentId = null
             )
         }

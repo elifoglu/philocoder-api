@@ -23,9 +23,10 @@ open class TagRepository(
         get() = "tagId"
 
     fun getTags(req: TagsRequest): List<Tag> {
-        return if (!req.onlyHeaderTags)
-            getEntities(req.page, req.size)
+        return (if (req.onlyHeaderTags)
+            getEntities(req.page, req.size, QueryBuilders.existsQuery("headerIndex"))
         else
-            getEntities(req.page, req.size, QueryBuilders.matchQuery("showInHeader", true))
+            getEntities(req.page, req.size))
+            .sortedBy { it.headerIndex }
     }
 }
