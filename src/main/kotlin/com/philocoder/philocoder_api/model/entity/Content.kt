@@ -19,20 +19,9 @@ data class Content(
     val contentId: ContentID,
     val content: String?,
     val tags: List<String>,
-    val refs: List<ContentID>?
+    val refs: List<ContentID>?,
+    val dateAsTimestamp: Long
 ) {
-
-    //This property is being indexed to elasticsearch, so it being used. Don't delete it.
-    val dateAsTimestamp: Long =
-        Calendar.getInstance()
-            .also {
-                if (date.year != null && date.month != null && date.day != null) {
-                    it.set(date.year, date.month - 1, date.day, date.publishOrderInDay, 0)
-                } else {
-                    it.set(2000, 0, 1, date.publishOrderInDay, 0)
-                }
-            }
-            .let { it.timeInMillis }
 
     companion object {
         fun createIfValidForCreation(
@@ -90,7 +79,8 @@ data class Content(
                 contentId = req.id.toInt(),
                 content = req.text,
                 tags = tagNames,
-                refs = refs
+                refs = refs,
+                dateAsTimestamp = Calendar.getInstance().timeInMillis
             )
         }
 
@@ -142,7 +132,8 @@ data class Content(
                 contentId = contentId,
                 content = req.text,
                 tags = tagNames,
-                refs = refs
+                refs = refs,
+                dateAsTimestamp = Calendar.getInstance().timeInMillis
             )
         }
 
@@ -173,14 +164,11 @@ data class Content(
             }
 
             //check if content with specified id not exists
-            val allContents = contentRepository.getEntities()
-            if (
-                !allContents.exists { it.contentId == contentId }
-            ) {
-                return null
-            }
+            val existingContent: Content = contentRepository.findEntity(contentId.toString())
+                ?: return null
 
             //check if every entered ref id exists
+            val allContents = contentRepository.getEntities()
             val refs = if (req.refs.isNullOrEmpty()) null else {
                 val refIds = req.refs.split(",").map { it.toInt() }
                 val allRefIdsExists = refIds.forAll { refId ->
@@ -203,7 +191,8 @@ data class Content(
                 contentId = contentId,
                 content = req.text,
                 tags = tagNames,
-                refs = refs
+                refs = refs,
+                dateAsTimestamp = existingContent.dateAsTimestamp
             )
         }
     }
