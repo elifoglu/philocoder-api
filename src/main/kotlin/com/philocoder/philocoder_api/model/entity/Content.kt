@@ -68,19 +68,26 @@ data class Content(
                 refIds
             }
 
+            val date = ContentDate(
+                day = if (req.date.isNullOrEmpty()) null else req.date.split(".")[0].toInt(),
+                month = if (req.date.isNullOrEmpty()) null else req.date.split(".")[1].toInt(),
+                year = if (req.date.isNullOrEmpty()) null else req.date.split(".")[2].toInt(),
+                publishOrderInDay = req.publishOrderInDay.toInt())
+
             return Content(
                 title = if (req.title.isNullOrEmpty()) null else req.title,
-                date = ContentDate(
-                    day = if (req.date.isNullOrEmpty()) null else req.date.split(".")[0].toInt(),
-                    month = if (req.date.isNullOrEmpty()) null else req.date.split(".")[1].toInt(),
-                    year = if (req.date.isNullOrEmpty()) null else req.date.split(".")[2].toInt(),
-                    publishOrderInDay = req.publishOrderInDay.toInt()
-                ),
+                date = date,
                 contentId = req.id.toInt(),
                 content = req.text,
                 tags = tagNames,
                 refs = refs,
-                dateAsTimestamp = Calendar.getInstance().timeInMillis
+                dateAsTimestamp = Calendar.getInstance()
+                    .also {
+                        if (date.year == null || date.month == null || date.day == null) {
+                            it.set(2000, 0, 1, date.publishOrderInDay, 0)
+                        }
+                    }
+                    .let { it.timeInMillis }
             )
         }
 
