@@ -1,5 +1,6 @@
 package com.philocoder.philocoder_api.controller
 
+import arrow.core.Tuple2
 import com.fasterxml.jackson.databind.ObjectReader
 import com.philocoder.philocoder_api.model.entity.Content
 import com.philocoder.philocoder_api.model.request.ContentsOfTagRequest
@@ -28,6 +29,11 @@ class ContentController(
     @GetMapping("/contents")
     fun get(req: ContentsOfTagRequest): ContentsResponse =
         service.getContentsResponse(req)
+
+    @CrossOrigin
+    @GetMapping("/content-refs")
+    fun getRefs(): List<Tuple2<Int, Int>> =
+        service.getAllReferenceData()
 
     @CrossOrigin
     @GetMapping("/contents/{contentId}")

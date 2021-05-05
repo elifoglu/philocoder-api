@@ -1,5 +1,6 @@
 package com.philocoder.philocoder_api.service
 
+import arrow.core.Tuple2
 import com.philocoder.philocoder_api.model.entity.Tag
 import com.philocoder.philocoder_api.model.request.ContentsOfTagRequest
 import com.philocoder.philocoder_api.model.response.ContentResponse
@@ -24,4 +25,11 @@ class ContentService(
             if (contentCount % req.size == 0) contentCount / req.size else (contentCount / req.size) + 1
         return ContentsResponse(totalPageCount, contentResponses)
     }
+
+    fun getAllReferenceData(): List<Tuple2<Int, Int>> =
+        repository.getEntities()
+            .mapNotNull {
+                it.refs?.map { ref -> Tuple2(it.contentId, ref) }
+            }
+            .flatten()
 }
