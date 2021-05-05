@@ -27,6 +27,12 @@ open class TagRepository(
             getEntities(req.page, req.size, QueryBuilders.existsQuery("headerIndex"))
         else
             getEntities(req.page, req.size))
-            .sortedBy { it.headerIndex }
+            .sortedWith { a, b ->
+                when {
+                    a.headerIndex == null -> 1
+                    b.headerIndex == null -> -1
+                    else -> a.headerIndex - b.headerIndex
+                }
+            }
     }
 }
