@@ -5,6 +5,9 @@ import com.philocoder.philocoder_api.model.ContentID
 import com.philocoder.philocoder_api.model.entity.Content
 import com.philocoder.philocoder_api.model.entity.Ref
 import com.philocoder.philocoder_api.repository.ContentRepository
+import org.joda.time.DateTime
+import org.joda.time.Instant
+import java.util.*
 
 data class ContentResponse(
     val title: String?,
@@ -21,9 +24,14 @@ data class ContentResponse(
                 ?.mapNotNull { id -> repo.findEntity(id.toString()) }
                 ?.map(Ref.Companion::createWith)
                 ?.distinctBy { it.id }
+            val date = DateTime(Instant.ofEpochMilli(content.dateAsTimestamp).toDate())
             return ContentResponse(
                 title = content.title,
-                date = content.date,
+                date = ContentDate(
+                    date.year,
+                    date.monthOfYear,
+                    date.dayOfMonth
+                ),
                 contentId = content.contentId,
                 content = content.content,
                 tags = content.tags,

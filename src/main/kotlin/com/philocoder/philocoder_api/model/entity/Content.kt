@@ -15,7 +15,6 @@ import java.util.*
 
 data class Content(
     val title: String?,
-    val date: ContentDate,
     val contentId: ContentID,
     val content: String?,
     val tags: List<String>,
@@ -32,7 +31,6 @@ data class Content(
             if (Encryptor.encrypt(req.password) != RootUserConfig.encryptedPassword
                 || req.id.isEmpty()
                 || req.text.isEmpty()
-                || req.publishOrderInDay.isEmpty()
                 || req.tags.isEmpty()
             ) {
                 return null
@@ -68,26 +66,13 @@ data class Content(
                 refIds
             }
 
-            val date = ContentDate(
-                day = if (req.date.isNullOrEmpty()) null else req.date.split(".")[0].toInt(),
-                month = if (req.date.isNullOrEmpty()) null else req.date.split(".")[1].toInt(),
-                year = if (req.date.isNullOrEmpty()) null else req.date.split(".")[2].toInt(),
-                publishOrderInDay = req.publishOrderInDay.toInt())
-
             return Content(
                 title = if (req.title.isNullOrEmpty()) null else req.title,
-                date = date,
                 contentId = req.id.toInt(),
                 content = req.text,
                 tags = tagNames,
                 refs = refs,
-                dateAsTimestamp = Calendar.getInstance()
-                    .also {
-                        if (date.year == null || date.month == null || date.day == null) {
-                            it.set(2000, 0, 1, date.publishOrderInDay, 0)
-                        }
-                    }
-                    .let { it.timeInMillis }
+                dateAsTimestamp = Calendar.getInstance().timeInMillis
             )
         }
 
@@ -99,7 +84,6 @@ data class Content(
         ): Content? {
             if (Encryptor.encrypt(req.password) != RootUserConfig.encryptedPassword
                 || req.text.isEmpty()
-                || req.publishOrderInDay.isEmpty()
                 || req.tags.isEmpty()
             ) {
                 return null
@@ -130,12 +114,6 @@ data class Content(
 
             return Content(
                 title = if (req.title.isNullOrEmpty()) null else req.title,
-                date = ContentDate(
-                    day = if (req.date.isNullOrEmpty()) null else req.date!!.split(".")[0].toInt(),
-                    month = if (req.date.isNullOrEmpty()) null else req.date!!.split(".")[1].toInt(),
-                    year = if (req.date.isNullOrEmpty()) null else req.date!!.split(".")[2].toInt(),
-                    publishOrderInDay = req.publishOrderInDay.toInt()
-                ),
                 contentId = contentId,
                 content = req.text,
                 tags = tagNames,
@@ -154,7 +132,6 @@ data class Content(
             if (Encryptor.encrypt(req.password) != RootUserConfig.encryptedPassword
                 || contentId.toString().isEmpty()
                 || req.text.isEmpty()
-                || req.publishOrderInDay.isEmpty()
                 || req.tags.isEmpty()
             ) {
                 return null
@@ -189,12 +166,6 @@ data class Content(
 
             return Content(
                 title = if (req.title.isNullOrEmpty()) null else req.title,
-                date = ContentDate(
-                    day = if (req.date.isNullOrEmpty()) null else req.date.split(".")[0].toInt(),
-                    month = if (req.date.isNullOrEmpty()) null else req.date.split(".")[1].toInt(),
-                    year = if (req.date.isNullOrEmpty()) null else req.date.split(".")[2].toInt(),
-                    publishOrderInDay = req.publishOrderInDay.toInt()
-                ),
                 contentId = contentId,
                 content = req.text,
                 tags = tagNames,
