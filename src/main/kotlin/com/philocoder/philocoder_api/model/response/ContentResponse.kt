@@ -1,6 +1,5 @@
 package com.philocoder.philocoder_api.model.response
 
-import com.philocoder.philocoder_api.model.ContentDate
 import com.philocoder.philocoder_api.model.ContentID
 import com.philocoder.philocoder_api.model.entity.Content
 import com.philocoder.philocoder_api.model.entity.Ref
@@ -11,7 +10,7 @@ import java.util.*
 
 data class ContentResponse(
     val title: String?,
-    val date: ContentDate,
+    val dateAsTimestamp: String,
     val contentId: ContentID,
     val content: String?,
     val tags: List<String>,
@@ -24,14 +23,9 @@ data class ContentResponse(
                 ?.mapNotNull { id -> repo.findEntity(id.toString()) }
                 ?.map(Ref.Companion::createWith)
                 ?.distinctBy { it.id }
-            val date = DateTime(Instant.ofEpochMilli(content.dateAsTimestamp).toDate())
             return ContentResponse(
                 title = content.title,
-                date = ContentDate(
-                    date.year,
-                    date.monthOfYear,
-                    date.dayOfMonth
-                ),
+                dateAsTimestamp = content.dateAsTimestamp.toString(),
                 contentId = content.contentId,
                 content = content.content,
                 tags = content.tags,
