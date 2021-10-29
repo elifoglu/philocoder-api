@@ -1,6 +1,5 @@
 package com.philocoder.philocoder_api.controller
 
-import arrow.core.Tuple2
 import com.fasterxml.jackson.databind.ObjectReader
 import com.philocoder.philocoder_api.model.entity.Content
 import com.philocoder.philocoder_api.model.request.ContentsOfTagRequest
@@ -8,6 +7,7 @@ import com.philocoder.philocoder_api.model.request.CreateContentRequest
 import com.philocoder.philocoder_api.model.request.UpdateContentRequest
 import com.philocoder.philocoder_api.model.response.ContentResponse
 import com.philocoder.philocoder_api.model.response.ContentsResponse
+import com.philocoder.philocoder_api.model.response.RefDataResponse
 import com.philocoder.philocoder_api.repository.ContentRepository
 import com.philocoder.philocoder_api.repository.TagRepository
 import com.philocoder.philocoder_api.service.ContentService
@@ -31,9 +31,9 @@ class ContentController(
         service.getContentsResponse(req)
 
     @CrossOrigin
-    @GetMapping("/content-refs")
-    fun getRefs(): List<Tuple2<Int, Int>> =
-        service.getAllReferenceData()
+    @GetMapping("/ref-data")
+    fun getAllRefData(): RefDataResponse =
+        service.getRefDataResponse()
 
     @CrossOrigin
     @GetMapping("/contents/{contentId}")
