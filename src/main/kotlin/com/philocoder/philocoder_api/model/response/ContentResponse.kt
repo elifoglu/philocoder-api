@@ -14,7 +14,8 @@ data class ContentResponse(
     val contentId: ContentID,
     val content: String?,
     val tags: List<String>,
-    val refs: List<Ref>?
+    val refs: List<Ref>?,
+    val okForBlogMode: Boolean
 ) {
 
     companion object {
@@ -29,7 +30,8 @@ data class ContentResponse(
                 contentId = content.contentId,
                 content = content.content,
                 tags = content.tags,
-                refs = refs
+                refs = refs,
+                okForBlogMode = content.okForBlogMode
             )
         }
     }
