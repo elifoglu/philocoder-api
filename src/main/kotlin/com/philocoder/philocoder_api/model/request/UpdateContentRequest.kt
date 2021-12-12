@@ -6,5 +6,6 @@ data class UpdateContentRequest(
     override val text: String,
     override val tags: String,
     override val refs: String?,
-    override val password: String
+    override val password: String,
+    override val okForBlogMode: Boolean
 ) : ContentRequest

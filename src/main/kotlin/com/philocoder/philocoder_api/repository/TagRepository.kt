@@ -23,10 +23,7 @@ open class TagRepository(
         get() = "tagId"
 
     fun getTags(req: TagsRequest): List<Tag> {
-        return (if (req.onlyHeaderTags)
-            getEntities(req.page, req.size, QueryBuilders.existsQuery("headerIndex"))
-        else
-            getEntities(req.page, req.size))
+        return getEntities(req.page, req.size)
             .sortedWith { a, b ->
                 when {
                     a.headerIndex == null -> 1

@@ -6,4 +6,5 @@ interface ContentRequest {
     val tags: String
     val refs: String?
     val password: String
+    val okForBlogMode: Boolean
 }

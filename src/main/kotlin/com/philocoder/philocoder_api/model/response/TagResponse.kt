@@ -1,6 +1,7 @@
 package com.philocoder.philocoder_api.model.response
 
 import com.philocoder.philocoder_api.model.entity.Tag
+import com.philocoder.philocoder_api.model.request.TagsRequest
 import com.philocoder.philocoder_api.repository.ContentRepository
 
 data class TagResponse(
@@ -16,7 +17,7 @@ data class TagResponse(
 ) {
 
     companion object {
-        fun createWith(tag: Tag, repo: ContentRepository): TagResponse =
+        fun createWith(tag: Tag, req: TagsRequest, repo: ContentRepository): TagResponse =
             TagResponse(
                 tagId = tag.tagId,
                 name = tag.name,
@@ -25,7 +26,7 @@ data class TagResponse(
                 contentRenderType = tag.contentRenderType,
                 showContentCount = tag.showContentCount,
                 headerIndex = tag.headerIndex,
-                contentCount = repo.getContentCount(tag.name),
+                contentCount = repo.getContentCount(tag.name, req.blogMode),
                 infoContentId = tag.infoContentId
             )
     }

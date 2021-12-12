@@ -24,7 +24,8 @@ class TagController(
     @GetMapping("/tags")
     fun get(req: TagsRequest): List<TagResponse> =
         repository.getTags(req)
-            .map { TagResponse.createWith(it, contentRepository) }
+            .map { TagResponse.createWith(it, req, contentRepository) }
+            .filter { it.contentCount != 0 }
 
     @CrossOrigin
     @PostMapping("/tags")

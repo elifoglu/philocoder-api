@@ -21,9 +21,9 @@ class ContentService(
     fun getContentsResponse(req: ContentsOfTagRequest): ContentsResponse {
         val tag: Tag = tagRepository.findEntity(req.tagId)
             ?: return ContentsResponse.empty
-        val contentResponses = repository.getContentsForTag(req.page, req.size, tag)
+        val contentResponses = repository.getContentsForTag(req.page, req.size, req.blogMode, tag)
             .map { ContentResponse.createWith(it, repository) }
-        val contentCount = repository.getContentCount(tag.name)
+        val contentCount = repository.getContentCount(tag.name, req.blogMode)
         val totalPageCount =
             if (contentCount % req.size == 0) contentCount / req.size else (contentCount / req.size) + 1
         return ContentsResponse(totalPageCount, contentResponses)

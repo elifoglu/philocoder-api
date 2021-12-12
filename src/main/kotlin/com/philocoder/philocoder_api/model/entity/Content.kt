@@ -2,7 +2,6 @@ package com.philocoder.philocoder_api.model.entity
 
 import arrow.core.extensions.list.foldable.exists
 import arrow.core.extensions.list.foldable.forAll
-import com.philocoder.philocoder_api.model.ContentDate
 import com.philocoder.philocoder_api.model.ContentID
 import com.philocoder.philocoder_api.model.request.ContentRequest
 import com.philocoder.philocoder_api.model.request.CreateContentRequest
@@ -19,7 +18,8 @@ data class Content(
     val content: String?,
     val tags: List<String>,
     val refs: List<ContentID>?,
-    val dateAsTimestamp: Long
+    val dateAsTimestamp: Long,
+    val okForBlogMode: Boolean
 ) {
 
     companion object {
@@ -72,7 +72,8 @@ data class Content(
                 content = req.text,
                 tags = tagNames,
                 refs = refs,
-                dateAsTimestamp = Calendar.getInstance().timeInMillis
+                dateAsTimestamp = Calendar.getInstance().timeInMillis,
+                okForBlogMode = req.okForBlogMode
             )
         }
 
@@ -118,7 +119,8 @@ data class Content(
                 content = req.text,
                 tags = tagNames,
                 refs = refs,
-                dateAsTimestamp = Calendar.getInstance().timeInMillis
+                dateAsTimestamp = Calendar.getInstance().timeInMillis,
+                okForBlogMode = req.okForBlogMode
             )
         }
 
@@ -170,7 +172,8 @@ data class Content(
                 content = req.text,
                 tags = tagNames,
                 refs = refs,
-                dateAsTimestamp = existingContent.dateAsTimestamp
+                dateAsTimestamp = existingContent.dateAsTimestamp,
+                okForBlogMode = req.okForBlogMode
             )
         }
     }

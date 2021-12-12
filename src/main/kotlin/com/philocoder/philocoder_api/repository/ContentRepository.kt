@@ -23,17 +23,23 @@ open class ContentRepository(
     override val entityKey: String
         get() = "contentId"
 
-    fun getContentsForTag(page: Int, size: Int, tag: Tag): List<Content> {
+    fun getContentsForTag(page: Int, size: Int, blogMode: Boolean, tag: Tag): List<Content> {
         return getEntities(
             page = page,
             size = size,
-            queryBuilder = QueryBuilders.matchQuery("tags", tag.name),
+            queryBuilder = if (!blogMode) QueryBuilders.matchQuery("tags", tag.name)
+            else QueryBuilders.boolQuery().must(QueryBuilders.matchQuery("tags", tag.name))
+                .must(QueryBuilders.termQuery("okForBlogMode", true)),
             sorter = tag.contentSorter
         )
     }
 
-    fun getContentCount(tagName: String): Int {
-        return getTotalEntityCount(QueryBuilders.matchQuery("tags", tagName))
+    fun getContentCount(tagName: String, blogMode: Boolean): Int {
+        return if (!blogMode) getTotalEntityCount(QueryBuilders.matchQuery("tags", tagName))
+        else getTotalEntityCount(
+            QueryBuilders.boolQuery().must(QueryBuilders.matchQuery("tags", tagName))
+                .must(QueryBuilders.termQuery("okForBlogMode", true))
+        )
     }
 }
 
