@@ -17,7 +17,7 @@ data class TagResponse(
 ) {
 
     companion object {
-        fun createWith(tag: Tag, req: TagsRequest, repo: ContentRepository): TagResponse =
+        fun create(tag: Tag, blogMode: Boolean, repo: ContentRepository): TagResponse =
             TagResponse(
                 tagId = tag.tagId,
                 name = tag.name,
@@ -26,8 +26,14 @@ data class TagResponse(
                 contentRenderType = tag.contentRenderType,
                 showContentCount = tag.showContentCount,
                 headerIndex = tag.headerIndex,
-                contentCount = repo.getContentCount(tag.name, req.blogMode),
+                contentCount = repo.getContentCount(tag.name, blogMode),
                 infoContentId = tag.infoContentId
             )
+
+        fun createForAllContentsMode(tag: Tag, repo: ContentRepository): TagResponse =
+            create(tag, false, repo)
+
+        fun createForBlogMode(tag: Tag, repo: ContentRepository): TagResponse =
+            create(tag, true, repo)
     }
 }

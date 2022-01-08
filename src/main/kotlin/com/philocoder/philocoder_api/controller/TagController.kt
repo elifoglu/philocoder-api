@@ -1,10 +1,9 @@
 package com.philocoder.philocoder_api.controller
 
 import com.fasterxml.jackson.databind.ObjectReader
-import com.philocoder.philocoder_api.model.entity.Content
 import com.philocoder.philocoder_api.model.entity.Tag
 import com.philocoder.philocoder_api.model.request.*
-import com.philocoder.philocoder_api.model.response.ContentResponse
+import com.philocoder.philocoder_api.model.response.TagDataResponse
 import com.philocoder.philocoder_api.model.response.TagResponse
 import com.philocoder.philocoder_api.repository.ContentRepository
 import com.philocoder.philocoder_api.repository.TagRepository
@@ -22,10 +21,16 @@ class TagController(
 
     @CrossOrigin
     @GetMapping("/tags")
-    fun get(req: TagsRequest): List<TagResponse> =
-        repository.getTags(req)
-            .map { TagResponse.createWith(it, req, contentRepository) }
-            .filter { it.contentCount != 0 }
+    fun get(req: TagsRequest): TagDataResponse
+    {
+        val allTags: List<Tag> = repository.getTags(req)
+        return TagDataResponse(
+            allTags = allTags.map { TagResponse.createForAllContentsMode(it, contentRepository) }
+                .filter { it.contentCount != 0 },
+            blogModeTags = allTags.map { TagResponse.createForBlogMode(it, contentRepository) }
+                .filter { it.contentCount != 0 }
+        )
+    }
 
     @CrossOrigin
     @PostMapping("/tags")
